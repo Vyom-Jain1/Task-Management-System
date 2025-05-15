@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
         // Set default values
         task.setCreatedAt(LocalDateTime.now());
         if (task.getStatus() == null) {
-            task.setStatus(TaskStatus.TO_DO);
+            task.setStatus(TaskStatus.PENDING);
         }
 
         return taskRepository.save(task);

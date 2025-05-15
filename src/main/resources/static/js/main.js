@@ -112,39 +112,22 @@ document.addEventListener("DOMContentLoaded", function () {
         status: status,
       };
 
-      const response = await fetch("/api/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(taskData),
-      });
+      const newTask = await createTask(taskData);
+      tasks.push(newTask);
+      filteredTasks = [...tasks];
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to create task");
+      // Reset form and close modal
+      document.getElementById("taskForm").reset();
+      const addTaskModal = bootstrap.Modal.getInstance(
+        document.getElementById("addTaskModal")
+      );
+      if (addTaskModal) {
+        addTaskModal.hide();
       }
 
-      if (result.success) {
-        tasks.push(result.data);
-        filteredTasks = [...tasks];
-
-        // Reset form and close modal
-        document.getElementById("taskForm").reset();
-        const addTaskModal = bootstrap.Modal.getInstance(
-          document.getElementById("addTaskModal")
-        );
-        if (addTaskModal) {
-          addTaskModal.hide();
-        }
-
-        // Update UI
-        updateUI();
-        showAlert(result.message || "Task created successfully", "success");
-      } else {
-        throw new Error(result.message || "Failed to create task");
-      }
+      // Update UI
+      updateUI();
+      showAlert("Task created successfully", "success");
     } catch (error) {
       console.error("Error creating task:", error);
       showAlert("Error creating task: " + error.message, "danger");

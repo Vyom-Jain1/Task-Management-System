@@ -35,7 +35,7 @@ class TaskServiceTest {
         task.setId(1L);
         task.setTitle("Test Task");
         task.setDescription("Test Description");
-        task.setStatus(TaskStatus.TODO);
+        task.setStatus(TaskStatus.IN_PROGRESS);
     }
 
     @Test
@@ -85,10 +85,10 @@ class TaskServiceTest {
 
     @Test
     void getTasksByStatus_ShouldReturnTasksWithGivenStatus() {
-        when(taskRepository.findByStatus(TaskStatus.TODO)).thenReturn(Arrays.asList(task));
-        List<Task> tasks = taskService.getTasksByStatus(TaskStatus.TODO.toString());
+        when(taskRepository.findByStatus(TaskStatus.IN_PROGRESS)).thenReturn(Arrays.asList(task));
+        List<Task> tasks = taskService.getTasksByStatus(TaskStatus.IN_PROGRESS.toString());
         assertNotNull(tasks);
         assertEquals(1, tasks.size());
-        verify(taskRepository, times(1)).findByStatus(TaskStatus.TODO);
+        verify(taskRepository, times(1)).findByStatus(TaskStatus.IN_PROGRESS);
     }
 }

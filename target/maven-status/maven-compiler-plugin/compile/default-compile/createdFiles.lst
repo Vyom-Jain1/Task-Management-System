@@ -1,0 +1,7 @@
+com\example\taskmanagement\TaskManagementApplication.class
+com\example\taskmanagement\service\impl\TaskServiceImpl.class
+com\example\taskmanagement\controller\TaskController.class
+com\example\taskmanagement\model\TaskStatus.class
+com\example\taskmanagement\service\TaskService.class
+com\example\taskmanagement\model\Task.class
+com\example\taskmanagement\repository\TaskRepository.class
