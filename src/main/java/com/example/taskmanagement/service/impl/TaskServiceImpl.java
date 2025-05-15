@@ -38,37 +38,62 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public Task createTask(Task task) {
-        validateTask(task);
+        try {
+            validateTask(task);
 
-        // Set default values
-        task.setCreatedAt(LocalDateTime.now());
-        if (task.getStatus() == null) {
-            task.setStatus(TaskStatus.PENDING);
+            // Set default values
+            task.setCreatedAt(LocalDateTime.now());
+            task.setUpdatedAt(LocalDateTime.now());
+            if (task.getStatus() == null) {
+                task.setStatus(TaskStatus.TODO);
+            }
+            if (task.getPriority() == null) {
+                task.setPriority(3); // Default to low priority
+            }
+
+            return taskRepository.save(task);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Validation error: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating task: " + e.getMessage());
         }
-
-        return taskRepository.save(task);
     }
 
     @Override
     @Transactional
     public Task updateTask(Long id, Task task) {
-        Task existingTask = getTaskById(id);
-        validateTask(task);
+        try {
+            Task existingTask = getTaskById(id);
+            validateTask(task);
 
-        // Update task fields
-        existingTask.setTitle(task.getTitle());
-        existingTask.setDescription(task.getDescription());
-        existingTask.setStatus(task.getStatus());
-        existingTask.setUpdatedAt(LocalDateTime.now());
+            // Update task fields
+            existingTask.setTitle(task.getTitle());
+            existingTask.setDescription(task.getDescription());
+            existingTask.setStatus(task.getStatus());
+            existingTask.setPriority(task.getPriority());
+            existingTask.setDeadline(task.getDeadline());
+            existingTask.setAssignedTo(task.getAssignedTo());
+            existingTask.setEstimatedHours(task.getEstimatedHours());
+            existingTask.setActualHours(task.getActualHours());
+            existingTask.setUpdatedAt(LocalDateTime.now());
 
-        return taskRepository.save(existingTask);
+            return taskRepository.save(existingTask);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Validation error: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating task: " + e.getMessage());
+        }
     }
 
     @Override
     @Transactional
     public void deleteTask(Long id) {
-        Task task = getTaskById(id);
-        taskRepository.delete(task);
+        try {
+            Task task = getTaskById(id);
+            taskRepository.delete(task);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting task: " + e.getMessage());
+        }
     }
 
     @Override
@@ -96,7 +121,7 @@ public class TaskServiceImpl implements TaskService {
         try {
             return taskRepository.findByTitleContainingIgnoreCase(title.trim());
         } catch (Exception e) {
-            throw new RuntimeException("Error searching tasks: " + e.getMessage(), e);
+            throw new RuntimeException("Error searching tasks: " + e.getMessage());
         }
     }
 
@@ -107,11 +132,21 @@ public class TaskServiceImpl implements TaskService {
         if (!StringUtils.hasText(task.getTitle())) {
             throw new IllegalArgumentException("Task title cannot be empty");
         }
-        if (task.getTitle().length() > 100) {
-            throw new IllegalArgumentException("Task title cannot exceed 100 characters");
+        if (task.getTitle().length() > 200) {
+            throw new IllegalArgumentException("Task title cannot exceed 200 characters");
         }
-        if (task.getDescription() != null && task.getDescription().length() > 500) {
-            throw new IllegalArgumentException("Task description cannot exceed 500 characters");
+        if (task.getDescription() != null && task.getDescription().length() > 1000) {
+            throw new IllegalArgumentException("Task description cannot exceed 1000 characters");
+        }
+        if (task.getStatus() != null) {
+            try {
+                TaskStatus.valueOf(task.getStatus().toString());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid task status: " + task.getStatus());
+            }
+        }
+        if (task.getPriority() != null && (task.getPriority() < 1 || task.getPriority() > 3)) {
+            throw new IllegalArgumentException("Priority must be between 1 and 3");
         }
     }
 }

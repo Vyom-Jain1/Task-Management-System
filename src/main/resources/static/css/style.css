@@ -49,9 +49,10 @@ body {
   padding: 1rem;
 }
 
-.table td {
-  padding: 1rem;
+.table td,
+.table th {
   vertical-align: middle;
+  padding: 0.75rem 1rem;
 }
 
 /* Action Buttons */
@@ -67,50 +68,198 @@ body {
   transform: translateY(-2px);
 }
 
-.edit-btn {
-  color: #0d6efd;
-  background-color: rgba(13, 110, 253, 0.1);
-}
-
 .delete-btn {
   color: #dc3545;
   background-color: rgba(220, 53, 69, 0.1);
 }
 
-/* Status Badges */
+/* Status Badge Pills */
 .status-badge {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
+  display: inline-block;
+  padding: 0.35em 1em;
+  border-radius: 999px;
   font-weight: 500;
-  font-size: 0.875rem;
-  transition: all 0.2s;
+  font-size: 0.95em;
+  letter-spacing: 0.02em;
+  margin-right: 0.25em;
+  margin-bottom: 0.1em;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 .status-TODO {
-  background-color: #e9ecef;
+  background: #e9ecef;
   color: #495057;
 }
 
 .status-IN_PROGRESS {
-  background-color: #fff3cd;
+  background: #fff3cd;
   color: #856404;
 }
 
 .status-COMPLETED {
-  background-color: #d4edda;
+  background: #d4edda;
   color: #155724;
 }
 
 .status-CANCELLED {
-  background-color: #f8d7da;
+  background: #f8d7da;
   color: #721c24;
 }
 
-/* Form Controls */
-.form-control:focus,
-.form-select:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+/* Highlight row/cell being edited */
+tr.editing-row,
+td.editing-cell {
+  background: #e3f2fd !important;
+  transition: background 0.2s;
+}
+
+/* Editable cell hover effect */
+.editable-cell {
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.editable-cell:hover {
+  background: #f1f3f4;
+}
+
+.editable-cell:hover:after {
+  content: "\270E"; /* pencil icon */
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1em;
+  color: #adb5bd;
+}
+
+/* Deadline formatting (handled in JS, but style for consistency) */
+td.deadline-cell {
+  font-family: "Inter", sans-serif;
+  font-size: 0.98em;
+  color: #495057;
+}
+
+/* Editable Fields Styles */
+.editable-field {
+  border: 1px solid transparent;
+  background-color: transparent;
+  transition: background 0.2s, border 0.2s, box-shadow 0.2s;
+}
+
+.editable-field:hover {
+  border-color: #dee2e6;
+  background-color: #fff;
+}
+
+.editable-field:focus {
+  border-color: #80bdff;
+  background-color: #fff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Deadline Control Styles */
+.deadline-control {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.deadline-control input[type="datetime-local"] {
+  flex: 1;
+  min-width: 200px;
+}
+
+.deadline-control .btn-outline-danger {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.deadline-control .btn-outline-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Make textarea height consistent */
+textarea.editable-field {
+  min-height: 38px;
+  resize: vertical;
+}
+
+/* Style for overdue tasks */
+tr.overdue {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Style for tasks due soon */
+tr.due-soon {
+  background-color: rgba(255, 193, 7, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card,
+.modal-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .table td {
+    padding: 0.75rem;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+
+  .stats-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 200px;
+  }
+}
+
+/* Deadline styles */
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
 }
 
 /* Search Box */
@@ -300,50 +449,4 @@ body {
 .btn-secondary:hover {
   background-color: #5c636a;
   border-color: #565e64;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.card,
-.modal-content {
-  animation: fadeIn 0.3s ease-out;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .container {
-    padding: 1rem;
-  }
-
-  .card {
-    margin-bottom: 1rem;
-  }
-
-  .table td {
-    padding: 0.75rem;
-  }
-
-  .search-box {
-    max-width: 100%;
-  }
-
-  .stats-container {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .stat-item {
-    flex: 1 1 calc(50% - 0.5rem);
-    min-width: 200px;
-  }
 }

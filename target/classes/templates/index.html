@@ -87,6 +87,7 @@
                 <label class="form-label">Sort By</label>
                 <select class="form-select" id="sortFilter">
                   <option value="createdAt">Created Date</option>
+                  <option value="deadline">Deadline</option>
                   <option value="title">Title</option>
                   <option value="status">Status</option>
                 </select>
@@ -156,6 +157,8 @@
                       <th>Title</th>
                       <th>Description</th>
                       <th>Status</th>
+                      <th>Deadline</th>
+                      <th>Time Status</th>
                       <th>Created At</th>
                       <th>Actions</th>
                     </tr>
@@ -218,6 +221,13 @@
                   <option value="CANCELLED">Cancelled</option>
                 </select>
               </div>
+              <div class="mb-3">
+                <label for="deadline" class="form-label">Deadline</label>
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  id="deadline" />
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -229,65 +239,6 @@
             </button>
             <button type="button" class="btn btn-primary" id="saveTask">
               <i class="fas fa-save me-2"></i>Save Task
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Task Modal -->
-    <div class="modal fade" id="editTaskModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">
-              <i class="fas fa-edit me-2"></i>Edit Task
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <form id="editTaskForm">
-              <input type="hidden" id="editTaskId" />
-              <div class="mb-3">
-                <label for="editTitle" class="form-label">Title</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="editTitle"
-                  required />
-              </div>
-              <div class="mb-3">
-                <label for="editDescription" class="form-label"
-                  >Description</label
-                >
-                <textarea
-                  class="form-control"
-                  id="editDescription"
-                  rows="3"></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="editStatus" class="form-label">Status</label>
-                <select class="form-select" id="editStatus" required>
-                  <option value="TODO">To Do</option>
-                  <option value="IN_PROGRESS">In Progress</option>
-                  <option value="COMPLETED">Completed</option>
-                  <option value="CANCELLED">Cancelled</option>
-                </select>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal">
-              <i class="fas fa-times me-2"></i>Cancel
-            </button>
-            <button type="button" class="btn btn-primary" id="saveEditTask">
-              <i class="fas fa-save me-2"></i>Save Changes
             </button>
           </div>
         </div>
