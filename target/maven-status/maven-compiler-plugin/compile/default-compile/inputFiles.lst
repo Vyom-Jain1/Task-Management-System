@@ -1,7 +1,10 @@
-C:\Users\91879\OneDrive\Desktop\java\src\main\java\com\example\taskmanagement\service\TaskService.java
-C:\Users\91879\OneDrive\Desktop\java\src\main\java\com\example\taskmanagement\model\TaskStatus.java
-C:\Users\91879\OneDrive\Desktop\java\src\main\java\com\example\taskmanagement\controller\TaskController.java
-C:\Users\91879\OneDrive\Desktop\java\src\main\java\com\example\taskmanagement\TaskManagementApplication.java
-C:\Users\91879\OneDrive\Desktop\java\src\main\java\com\example\taskmanagement\service\impl\TaskServiceImpl.java
-C:\Users\91879\OneDrive\Desktop\java\src\main\java\com\example\taskmanagement\model\Task.java
-C:\Users\91879\OneDrive\Desktop\java\src\main\java\com\example\taskmanagement\repository\TaskRepository.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\service\AzureBlobStorageService.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\TaskManagementApplication.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\repository\TaskJdbcDao.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\repository\TaskRepository.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\config\AzureConfiguration.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\service\impl\TaskServiceImpl.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\controller\TaskController.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\model\Task.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\model\TaskStatus.java
+D:\Github Projects\Task-Management-System\src\main\java\com\example\taskmanagement\service\TaskService.java

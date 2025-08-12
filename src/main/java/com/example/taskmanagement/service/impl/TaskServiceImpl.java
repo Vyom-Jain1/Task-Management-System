@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -42,13 +41,14 @@ public class TaskServiceImpl implements TaskService {
             validateTask(task);
 
             // Set default values
-            task.setCreatedAt(LocalDateTime.now());
-            task.setUpdatedAt(LocalDateTime.now());
             if (task.getStatus() == null) {
                 task.setStatus(TaskStatus.TODO);
             }
             if (task.getPriority() == null) {
                 task.setPriority(3); // Default to low priority
+            }
+            if (task.getUserId() == null) {
+                task.setUserId(1L); // Default user ID for single-user mode
             }
 
             return taskRepository.save(task);
@@ -75,7 +75,8 @@ public class TaskServiceImpl implements TaskService {
             existingTask.setAssignedTo(task.getAssignedTo());
             existingTask.setEstimatedHours(task.getEstimatedHours());
             existingTask.setActualHours(task.getActualHours());
-            existingTask.setUpdatedAt(LocalDateTime.now());
+            // Keep the existing userId - don't allow updating it
+            // updatedAt will be set automatically by @PreUpdate
 
             return taskRepository.save(existingTask);
         } catch (IllegalArgumentException e) {

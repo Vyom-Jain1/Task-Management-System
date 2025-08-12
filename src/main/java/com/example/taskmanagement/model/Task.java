@@ -39,6 +39,9 @@ public class Task {
     @Column(name = "priority", nullable = false)
     private Integer priority = 3; // 1: High, 2: Medium, 3: Low
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId = 1L; // Default user ID for single-user mode
+
     @Column(name = "assigned_to")
     private String assignedTo;
 
@@ -47,6 +50,12 @@ public class Task {
 
     @Column(name = "actual_hours")
     private Double actualHours;
+
+    @Column(name = "attachment_url")
+    private String attachmentUrl;
+
+    @Column(name = "attachment_filename")
+    private String attachmentFilename;
 
     @PrePersist
     protected void onCreate() {
