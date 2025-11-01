@@ -2,13 +2,10 @@ package com.example.taskmanagement.controller;
 
 import com.example.taskmanagement.model.Task;
 import com.example.taskmanagement.service.TaskService;
-import com.example.taskmanagement.service.AzureBlobStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -26,7 +23,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllTasks() {
+    public ResponseEntity<List<Task>> getAllTasks() {
         try {
             List<Task> tasks = taskService.getAllTasks();
             return ResponseEntity.ok(tasks);
@@ -52,8 +49,6 @@ public class TaskController {
         try {
             Task createdTask = taskService.createTask(task);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
-        } catch (IllegalArgumentException e) {
-            return createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return createErrorResponse("Error creating task: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -64,8 +59,6 @@ public class TaskController {
         try {
             Task updatedTask = taskService.updateTask(id, task);
             return ResponseEntity.ok(updatedTask);
-        } catch (IllegalArgumentException e) {
-            return createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             return createErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -77,7 +70,7 @@ public class TaskController {
     public ResponseEntity<?> deleteTask(@PathVariable Long id) {
         try {
             taskService.deleteTask(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return createErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -85,35 +78,32 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<?> getTasksByStatus(@PathVariable String status) {
-        try {
-            List<Task> tasks = taskService.getTasksByStatus(status);
-            return ResponseEntity.ok(tasks);
-        } catch (IllegalArgumentException e) {
-            return createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return createErrorResponse("Error retrieving tasks by status: " + e.getMessage(),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping("/search")
-    public ResponseEntity<?> searchTasksByTitle(@RequestParam String title) {
+    public ResponseEntity<?> searchTasks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String status) {
         try {
-            List<Task> tasks = taskService.searchTasksByTitle(title);
+            List<Task> tasks;
+            
+            if (title != null && !title.isEmpty() && status != null && !status.isEmpty()) {
+                tasks = taskService.searchTasks(title, status);
+            } else if (title != null && !title.isEmpty()) {
+                tasks = taskService.searchByTitle(title);
+            } else if (status != null && !status.isEmpty()) {
+                tasks = taskService.searchByStatus(status);
+            } else {
+                tasks = taskService.getAllTasks();
+            }
+            
             return ResponseEntity.ok(tasks);
-        } catch (IllegalArgumentException e) {
-            return createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return createErrorResponse("Error searching tasks: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private ResponseEntity<Map<String, Object>> createErrorResponse(String message, HttpStatus status) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", false);
-        response.put("message", message);
-        return ResponseEntity.status(status).body(response);
+    private ResponseEntity<Map<String, String>> createErrorResponse(String message, HttpStatus status) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", message);
+        return ResponseEntity.status(status).body(error);
     }
 }
