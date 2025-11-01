@@ -92,7 +92,7 @@ public class TaskController {
                 // Search by both title and status: first get by title, then filter by status
                 List<Task> titleResults = taskService.searchTasksByTitle(title);
                 tasks = titleResults.stream()
-                    .filter(task -> status.equalsIgnoreCase(task.getStatus()))
+                    .filter(task -> status.equalsIgnoreCase(task.getStatus().name()))
                     .collect(java.util.stream.Collectors.toList());
             } else if (title != null && !title.isEmpty()) {
                 tasks = taskService.searchTasksByTitle(title);
