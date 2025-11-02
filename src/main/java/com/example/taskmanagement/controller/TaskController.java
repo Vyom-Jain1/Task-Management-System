@@ -42,7 +42,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTaskById(@PathVariable Long id) {
+    public ResponseEntity<Object> getTaskById(@PathVariable Long id) {
         try {
             logger.info("Request received to get task with ID: {}", id);
             
@@ -73,7 +73,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createTask(@RequestBody Task task) {
+    public ResponseEntity<Object> createTask(@RequestBody Task task) {
         try {
             logger.info("Request received to create new task");
             
@@ -104,7 +104,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTask(@PathVariable Long id, @RequestBody Task task) {
+    public ResponseEntity<Object> updateTask(@PathVariable Long id, @RequestBody Task task) {
         try {
             logger.info("Request received to update task with ID: {}", id);
             
@@ -127,18 +127,18 @@ public class TaskController {
             Task updatedTask = taskService.updateTask(id, task);
             logger.info("Successfully updated task with ID: {}", id);
             return ResponseEntity.ok(updatedTask);
-        } catch (RuntimeException e) {
-            logger.warn("Task not found for update with ID: {}. Error: {}", id, e.getMessage());
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Task not found");
-            error.put("message", "Task with ID " + id + " does not exist");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         } catch (IllegalArgumentException e) {
             logger.warn("Validation error updating task with ID {}: {}", id, e.getMessage());
             Map<String, String> error = new HashMap<>();
             error.put("error", "Validation error");
             error.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        } catch (RuntimeException e) {
+            logger.warn("Task not found for update with ID: {}. Error: {}", id, e.getMessage());
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Task not found");
+            error.put("message", "Task with ID " + id + " does not exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         } catch (Exception e) {
             logger.error("Unexpected error updating task with ID {}: {}", id, e.getMessage(), e);
             Map<String, String> error = new HashMap<>();
@@ -149,7 +149,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteTask(@PathVariable Long id) {
         try {
             logger.info("Request received to delete task with ID: {}", id);
             
@@ -180,7 +180,7 @@ public class TaskController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchTasks(
+    public ResponseEntity<Object> searchTasks(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String status) {
         try {
